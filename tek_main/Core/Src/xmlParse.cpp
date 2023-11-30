@@ -4,6 +4,41 @@
 
 
 
+struct Credentials {
+    std::string user;
+    std::string password;
+    std::string brokerAddress;
+};
+
+Credentials parseCredentials(std::string config) {
+    std::regex extractWithinQuotes("\"([^\"]*)\"");
+    std::regex userRgx("User value=\".+\"");
+    std::regex passwordRgx("Password value=\".+\"");
+    std::regex brokerRgx("BrokerAddress value=\".+\"");
+    std::smatch match;
+
+    std::regex_search(config, match, userRgx);
+    std::string userFetched = match[0];
+    std::regex_search(userFetched, match, extractWithinQuotes);
+    userFetched = match[1];
+
+    std::regex_search(config, match, passwordRgx);
+    std::string passwordFetched = match[0];
+    std::regex_search(passwordFetched, match, extractWithinQuotes);
+    passwordFetched = match[1];
+
+    std::regex_search(config, match, brokerRgx);
+    std::string brokerFetched = match[0];
+    std::regex_search(brokerFetched, match, extractWithinQuotes);
+    brokerFetched = match[1];
+
+    return (struct Credentials){
+        userFetched,
+        passwordFetched,
+        brokerFetched,
+    };
+}
+
 std::vector<DeviceParameters> parseConfigString(std::string config) {
     std::vector<std::regex> expressions = {
         // std::regex(R"(guid=".*?")"),
@@ -73,10 +108,6 @@ std::vector<DeviceParameters> parseConfigString(std::string config) {
 
     return parsedData;
 }
-
-
-
-
 
 
 

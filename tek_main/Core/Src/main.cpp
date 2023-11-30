@@ -111,8 +111,11 @@ void Worker_func(void *argument);
 /* USER CODE BEGIN 0 */
 GlobalDataKeeper data;
 string modemRx;
-device_conf dev;
+device_conf dev[400];
 xQueueHandle modbus_to_mqtt_queue;
+xQueueHandle mqtt_to_modbus_queue;
+
+
 /* USER CODE END 0 */
 
 /**
@@ -170,6 +173,9 @@ int main(void)
   /* Create the queue(s) */
   /* creation of modbas_to_mqtt */
   modbas_to_mqttHandle = osMessageQueueNew (350, sizeof(uint16_t), &modbas_to_mqtt_attributes);
+
+  modbus_to_mqtt_queue =xQueueCreate( 128, sizeof( unsigned char ) );
+  mqtt_to_modbus_queue=xQueueCreate( 128, sizeof( unsigned char ) );
 
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
@@ -458,7 +464,7 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-
+string res;
 /* USER CODE END 4 */
 
 /* USER CODE BEGIN Header_StartDefaultTask */
@@ -500,12 +506,12 @@ void ModemUartFunc(void *argument)
 	{
 		if(true)
 		{
-			mqtt_send("","");
+			mqtt_send(dev[0].topic,res);
 		}
 		else
 		{
 			if(true)
-				mqtt_sub("", 0);
+				mqtt_sub(dev[0].topic, dev[0].topic.length());
 		}
 
 	}
@@ -524,7 +530,7 @@ void ModemUartFunc(void *argument)
 void modbus_write(void *argument)
 {
   /* USER CODE BEGIN modbus_write */
-	string res;
+
 	unsigned char toSend;
   /* Infinite loop */
   for(;;)
@@ -534,13 +540,13 @@ void modbus_write(void *argument)
 
 		if(true)
 		{
-		res=read_modbus(dev.address,(dev.register_adress>>8)&0xFF , dev.register_adress&0xFF, dev.num_register);
+		res=read_modbus(dev[0].address,(dev[0].register_adress>>8)&0xFF , dev[0].register_adress&0xFF, dev[0].num_register);
 		xQueueSend(modbus_to_mqtt_queue,&toSend,100);
 		}
 		else
 			if(true)
 			{
-				write_modbus(dev.address, (dev.register_adress>>8)&0xFF , dev.register_adress&0xFF, dev.num_register,  (uint8_t*)modemRx.c_str());
+				write_modbus(dev[0].address, (dev[0].register_adress>>8)&0xFF , dev[0].register_adress&0xFF, dev[0].num_register,  (uint8_t*)modemRx.c_str());
 			}
 
 	}

@@ -26,6 +26,9 @@ typedef struct
 	int pull_interval;
 	int data_type;
 	string topic;
+	string user;
+	string password;
+	string apn;
 } device_conf;
 
 
