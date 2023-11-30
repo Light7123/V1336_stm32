@@ -19,8 +19,8 @@ using namespace std;
 
 
 void sendData_rs485(uint8_t *data, int size);
-void write_modbus(uint8_t slave_address,uint8_t register_high,uint8_t register_low, uint8_t num_reg_high, uint8_t num_reg_low, uint8_t byte_count, uint8_t* data );
-string read_modbus(uint8_t slave_address,uint8_t register_high,uint8_t register_low, uint8_t num_reg_high, uint8_t num_reg_low);
+void write_modbus(uint8_t slave_address,uint8_t register_high,uint8_t register_low, uint8_t num_reg, uint8_t* data );
+string read_modbus(uint8_t slave_address,uint8_t register_high,uint8_t register_low, int num_reg);
 
 
 #endif /* INC_MODBUS_H_ */

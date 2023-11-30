@@ -22,7 +22,7 @@ void sendData_rs485 (uint8_t *data, int size)
 	HAL_GPIO_WritePin(GPIOG, GPIO_PIN_8,  GPIO_PIN_RESET);
 }
 
-void write_modbus(uint8_t slave_address,uint8_t register_high,uint8_t register_low, uint8_t num_reg_high, uint8_t num_reg_low, uint8_t byte_count, uint8_t* data )
+void write_modbus(uint8_t slave_address,uint8_t register_high,uint8_t register_low, int num_reg, uint8_t* data )
 {
 	int j;
 
@@ -34,13 +34,13 @@ void write_modbus(uint8_t slave_address,uint8_t register_high,uint8_t register_l
 			TxData_modbus[3] = register_low;  // Register address low
 			//The coil address will be 00000000 00000000 = 0 + 40001 = 40001
 
-			TxData_modbus[4] = num_reg_high;  // no. of Registers high
-			TxData_modbus[5] = num_reg_low;  // no. of Registers low
+			TxData_modbus[4] = 0;  // no. of Registers high
+			TxData_modbus[5] = num_reg;  // no. of Registers low
 			// Total no. of Registers = 00000000 00000011 = 3 Registers
 
-			TxData_modbus[6] = byte_count; // Byte count (3 Registers would need 6 bytes (2 bytes per register))
+			TxData_modbus[6] = num_reg*2; // Byte count (3 Registers would need 6 bytes (2 bytes per register))
 
-			for(int i=0; i<byte_count; i++)
+			for(int i=0; i<num_reg*2; i++)
 			{
 			TxData_modbus[i+7] = data[i];  // Data High for first Register
 			}
@@ -73,7 +73,7 @@ void write_modbus(uint8_t slave_address,uint8_t register_high,uint8_t register_l
 
 }
 
-string read_modbus(uint8_t slave_address,uint8_t register_high,uint8_t register_low, uint8_t num_reg_high, uint8_t num_reg_low)
+string read_modbus(uint8_t slave_address,uint8_t register_high,uint8_t register_low, int num_reg)
 {
 	int j;
 	TxData_modbus[0] = slave_address;  // slave address
@@ -83,8 +83,8 @@ string read_modbus(uint8_t slave_address,uint8_t register_high,uint8_t register_
 	TxData_modbus[3] = register_low;
 	//The Register address will be 00000000 00000001 = 1 +30001 = 30002
 
-	TxData_modbus[4] = num_reg_high;
-	TxData_modbus[5] = num_reg_low;
+	TxData_modbus[4] = 0;
+	TxData_modbus[5] = num_reg;
 	// no of registers to read will be 00000000 00000101 = 5 Registers = 10 Bytes
 
 	uint16_t crc = crc16_modbus(TxData_modbus, 6);

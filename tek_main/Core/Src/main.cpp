@@ -28,6 +28,7 @@
 #include "GlobalDataKeeper.h"
 #include "task.h"
 #include "queue.h"
+#include "xmlParse.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -110,6 +111,7 @@ void Worker_func(void *argument);
 /* USER CODE BEGIN 0 */
 GlobalDataKeeper data;
 string modemRx;
+device_conf dev;
 xQueueHandle modbus_to_mqtt_queue;
 /* USER CODE END 0 */
 
@@ -469,6 +471,8 @@ static void MX_GPIO_Init(void)
 void StartDefaultTask(void *argument)
 {
   /* USER CODE BEGIN 5 */
+
+
   /* Infinite loop */
   for(;;)
   {
@@ -530,13 +534,13 @@ void modbus_write(void *argument)
 
 		if(true)
 		{
-		res=read_modbus(0, 0, 0, 0, 0);
+		res=read_modbus(dev.address,(dev.register_adress>>8)&0xFF , dev.register_adress&0xFF, dev.num_register);
 		xQueueSend(modbus_to_mqtt_queue,&toSend,100);
 		}
 		else
 			if(true)
 			{
-				write_modbus(0, 0, 0, 0, 0, 2, 0);
+				write_modbus(dev.address, (dev.register_adress>>8)&0xFF , dev.register_adress&0xFF, dev.num_register,  (uint8_t*)modemRx.c_str());
 			}
 
 	}
