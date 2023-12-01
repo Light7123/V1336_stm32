@@ -47,6 +47,8 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
+RTC_HandleTypeDef hrtc;
+
 UART_HandleTypeDef huart4;
 UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart2;
@@ -98,6 +100,7 @@ static void MX_USART1_UART_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_USART6_UART_Init(void);
 static void MX_USART3_UART_Init(void);
+static void MX_RTC_Init(void);
 void StartDefaultTask(void *argument);
 void ModemUartFunc(void *argument);
 void modbus_write(void *argument);
@@ -111,7 +114,8 @@ void Worker_func(void *argument);
 /* USER CODE BEGIN 0 */
 GlobalDataKeeper data;
 string modemRx;
-device_conf dev[400];
+vector<device_conf>  dev __attribute__((section(".ccmram")));
+//device_conf  dev[400] __attribute__((section(".ccmram")));
 xQueueHandle modbus_to_mqtt_queue;
 xQueueHandle mqtt_to_modbus_queue;
 
@@ -151,6 +155,7 @@ int main(void)
   MX_USART2_UART_Init();
   MX_USART6_UART_Init();
   MX_USART3_UART_Init();
+  MX_RTC_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
@@ -173,9 +178,6 @@ int main(void)
   /* Create the queue(s) */
   /* creation of modbas_to_mqtt */
   modbas_to_mqttHandle = osMessageQueueNew (350, sizeof(uint16_t), &modbas_to_mqtt_attributes);
-
-  modbus_to_mqtt_queue =xQueueCreate( 128, sizeof( unsigned char ) );
-  mqtt_to_modbus_queue=xQueueCreate( 128, sizeof( unsigned char ) );
 
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
@@ -200,6 +202,10 @@ int main(void)
 
   /* USER CODE BEGIN RTOS_EVENTS */
   /* add events, ... */
+
+  modbus_to_mqtt_queue =xQueueCreate( 128, sizeof( unsigned char ) );
+  mqtt_to_modbus_queue=xQueueCreate( 128, sizeof( unsigned char ) );
+
   /* USER CODE END RTOS_EVENTS */
 
   /* Start scheduler */
@@ -234,9 +240,10 @@ void SystemClock_Config(void)
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI|RCC_OSCILLATORTYPE_LSI;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+  RCC_OscInitStruct.LSIState = RCC_LSI_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
@@ -256,6 +263,41 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
+}
+
+/**
+  * @brief RTC Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_RTC_Init(void)
+{
+
+  /* USER CODE BEGIN RTC_Init 0 */
+
+  /* USER CODE END RTC_Init 0 */
+
+  /* USER CODE BEGIN RTC_Init 1 */
+
+  /* USER CODE END RTC_Init 1 */
+
+  /** Initialize RTC Only
+  */
+  hrtc.Instance = RTC;
+  hrtc.Init.HourFormat = RTC_HOURFORMAT_24;
+  hrtc.Init.AsynchPrediv = 127;
+  hrtc.Init.SynchPrediv = 255;
+  hrtc.Init.OutPut = RTC_OUTPUT_DISABLE;
+  hrtc.Init.OutPutPolarity = RTC_OUTPUT_POLARITY_HIGH;
+  hrtc.Init.OutPutType = RTC_OUTPUT_TYPE_OPENDRAIN;
+  if (HAL_RTC_Init(&hrtc) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN RTC_Init 2 */
+
+  /* USER CODE END RTC_Init 2 */
+
 }
 
 /**
@@ -465,6 +507,9 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 string res;
+RTC_InitTypeDef rtc;
+RTC_TimeTypeDef time_op;
+
 /* USER CODE END 4 */
 
 /* USER CODE BEGIN Header_StartDefaultTask */
@@ -497,22 +542,31 @@ void StartDefaultTask(void *argument)
 /* USER CODE END Header_ModemUartFunc */
 void ModemUartFunc(void *argument)
 {
+
   /* USER CODE BEGIN ModemUartFunc */
+	for(int i=0;i<dev.size();i++)
+	{
+		if(dev[i].pull_mode==1)
+		{
+		mqtt_sub(dev[i].topic, dev[i].topic.length());
+		}
+	}
   /* Infinite loop */
   for(;;)
   {
 	modemRx= mqtt_recive();
+
 	if(uxQueueMessagesWaiting(modbus_to_mqtt_queue)>1)
 	{
-		if(true)
+		if(!dev[0].modbus_result.empty())
 		{
-			mqtt_send(dev[0].topic,res);
+			mqtt_send(dev[0].topic,dev[0].modbus_result);
+
 		}
-		else
-		{
-			if(true)
-				mqtt_sub(dev[0].topic, dev[0].topic.length());
-		}
+
+
+
+
 
 	}
     osDelay(100);
@@ -535,18 +589,19 @@ void modbus_write(void *argument)
   /* Infinite loop */
   for(;;)
   {
-	for(int i=0;i<1;i++)//TODO получение количества опрашиваемых регистров
+	for(int i=0;i<dev.size();i++)//TODO получение количества опрашиваемых регистров
 	{
 
-		if(true)
+		if(time_op.Minutes-dev[i].last_time.Minutes>=dev[i].pull_interval)
 		{
-		res=read_modbus(dev[0].address,(dev[0].register_adress>>8)&0xFF , dev[0].register_adress&0xFF, dev[0].num_register);
+		dev[i].modbus_result=read_modbus(dev[i].address,(dev[i].register_adress>>8)&0xFF , dev[i].register_adress&0xFF, dev[i].num_register);
 		xQueueSend(modbus_to_mqtt_queue,&toSend,100);
 		}
 		else
-			if(true)
+			if(!modemRx.empty())
 			{
-				write_modbus(dev[0].address, (dev[0].register_adress>>8)&0xFF , dev[0].register_adress&0xFF, dev[0].num_register,  (uint8_t*)modemRx.c_str());
+				write_modbus(dev[i].address,(dev[i].register_adress>>8)&0xFF , dev[i].register_adress&0xFF, dev[i].num_register,(uint8_t*)modemRx.c_str());
+				dev[i].last_time.Minutes=time_op.Minutes;
 			}
 
 	}
@@ -574,6 +629,27 @@ void Worker_func(void *argument)
 	   osDelay(1000);
   }
   /* USER CODE END Worker_func */
+}
+
+/**
+  * @brief  Period elapsed callback in non blocking mode
+  * @note   This function is called  when TIM1 interrupt took place, inside
+  * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
+  * a global variable "uwTick" used as application time base.
+  * @param  htim : TIM handle
+  * @retval None
+  */
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+  /* USER CODE BEGIN Callback 0 */
+
+  /* USER CODE END Callback 0 */
+  if (htim->Instance == TIM1) {
+    HAL_IncTick();
+  }
+  /* USER CODE BEGIN Callback 1 */
+
+  /* USER CODE END Callback 1 */
 }
 
 /**

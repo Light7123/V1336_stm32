@@ -29,6 +29,8 @@ typedef struct
 	string user;
 	string password;
 	string apn;
+	RTC_TimeTypeDef last_time;
+	string modbus_result;
 } device_conf;
 
 
