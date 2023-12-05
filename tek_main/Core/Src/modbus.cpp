@@ -40,17 +40,18 @@ void write_modbus(uint8_t slave_address,uint8_t register_high,uint8_t register_l
 
 			TxData_modbus[6] = num_reg*2; // Byte count (3 Registers would need 6 bytes (2 bytes per register))
 
-			for(int i=0; i<num_reg*2; i++)
+			int i=0;
+			for(i=0; i<num_reg*2; i++)
 			{
 			TxData_modbus[i+7] = data[i];  // Data High for first Register
 			}
 
 
 			uint16_t crc = crc16_modbus(TxData_modbus, 9);
-			TxData_modbus[9] = crc&0xFF;   // CRC LOW
-			TxData_modbus[10] = (crc>>8)&0xFF;  // CRC HIGH
+			TxData_modbus[i+8] = crc&0xFF;   // CRC LOW
+			TxData_modbus[i+9] = (crc>>8)&0xFF;  // CRC HIGH
 
-			sendData_rs485(TxData_modbus,11);
+			sendData_rs485(TxData_modbus,i+10);
 			//HAL_UART_Transmit(&huart6, TxData_modbus, 32, 400);
 			std::string str1;
 			std::string str2;

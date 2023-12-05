@@ -31,6 +31,7 @@ typedef struct
 	string apn;
 	RTC_TimeTypeDef last_time;
 	string modbus_result;
+	string old_modbus_res;
 } device_conf;
 
 

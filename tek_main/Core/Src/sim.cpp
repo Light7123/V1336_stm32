@@ -29,6 +29,7 @@ void mqtt_send(string topic,string message)
 
 string mqtt_recive()
 {
+	//HAL_UART_Transmit(&huart1, (uint8_t*)"res", 3, 100);
 	string res;
 	uint8_t data[150];
 	HAL_UARTEx_ReceiveToIdle_IT(&huart1, data, 150);
@@ -38,6 +39,6 @@ string mqtt_recive()
 
 void mqtt_sub(string topic1, int size)
 {
-	string ch="+sub,"+topic1+",";
+	string ch="+subs,"+topic1+",";
 	HAL_UART_Transmit(&huart1, (uint8_t*)ch.c_str(), ch.length(), ch.length()*3);
 }

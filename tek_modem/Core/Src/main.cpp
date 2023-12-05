@@ -145,8 +145,8 @@ void modem_wait()
 int modem_init()
 {
 
-	char serv[30];
-	char user[30];
+	string serv;
+	string user;
 
 
 					 int j=0;
@@ -154,7 +154,7 @@ int modem_init()
 					 {
 						 if(rx_data[i+j+1]!=',')
 						 {
-						 serv[j]= rx_data[i+j+1];
+						 serv.push_back(rx_data[i+j+1]);
 						 }
 						 else
 						 {
@@ -166,7 +166,7 @@ int modem_init()
 					 {
 						 if(rx_data[i+j+1]!=',')
 						 {
-						 user[j]= rx_data[i+j+1];
+						 user.push_back(rx_data[i+j+1]);
 						 }
 						 else
 						 {
@@ -176,13 +176,13 @@ int modem_init()
 					 }
 
 
-	return  Mqtt_Init(serv, user);
+	return  Mqtt_Init((char*)serv.c_str(), (char*)user.c_str());
 
 }
 void modem_send()
 {
-	char topic[50];
-	char mess[100];
+	string topic;
+	string mess;
 
 
 					 int j=0;
@@ -190,7 +190,7 @@ void modem_send()
 					 {
 						 if(rx_data[i+j+1]!=',')
 						 {
-						 topic[j]= rx_data[i+j+1];
+						 topic.push_back(rx_data[i+j+1]);
 						 }
 						 else
 						 {
@@ -202,7 +202,7 @@ void modem_send()
 					 {
 						 if(rx_data[i+j+1]!=',')
 						 {
-						mess[j]= rx_data[i+j+1];
+						mess.push_back(rx_data[i+j+1]);
 						 }
 						 else
 						 {
@@ -212,11 +212,11 @@ void modem_send()
 					 }
 
 
-	 Mqtt_Publish(topic, mess);
+	 Mqtt_Publish((char*)topic.c_str(), (char*)mess.c_str());
 }
 void modem_sub()
 {
-	char topic[50];
+	string topic;
 	 int j=0;
 
 
@@ -224,7 +224,7 @@ void modem_sub()
 					 {
 						 if(rx_data[i+j+1]!=',')
 						 {
-						 topic[j]= rx_data[i+j+1];
+						 topic.push_back(rx_data[i+j+1]);
 						 }
 						 else
 						 {
@@ -235,7 +235,7 @@ void modem_sub()
 
 
 
-	  Mqtt_Subscribe(topic, j);
+	  Mqtt_Subscribe((char*)topic.c_str(), topic.length());
 }
 /* USER CODE BEGIN PFP */
 
@@ -309,10 +309,10 @@ int main(void)
 	  //CSQ_status();
 	  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_1);
 	  modem_wait();
-//	  Uart_sendstring( "ATI\r\n");
-//	  HAL_Delay(50);
-//
-//	  Get_after("",512, data);
+	  Uart_sendstring( "AT+CMQTTSTART\r\n");
+	  HAL_Delay(50);
+
+	  Get_after("",512, data);
 //	  Uart_sendstring( "ATI\r\n");
 //	  HAL_Delay(50);
 //	  Get_after("",512, data);
