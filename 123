@@ -1,0 +1,55 @@
+void publishMessage(int socket, const std::string& topic, const std::string& payload) {
+    uint8_t buffer[1024]; // Буфер для хранения пакета
+    int buflen = 0;
+
+    // Формирование пакета публикации
+    buffer[buflen++] = 0b00110001; // Фиксированный заголовок пакета публикации
+    // Длина переменной части пакета
+    buflen += snprintf(reinterpret_cast<char*>(buffer + buflen), sizeof(buffer) - buflen, "\x00\x04%s", topic.c_str());
+    // Идентификатор сообщения
+    buffer[buflen++] = 0x00;
+    buffer[buflen++] = 0x01; // Номер сообщения
+    // Добавление содержимого сообщения
+    buflen += snprintf(reinterpret_cast<char*>(buffer + buflen), sizeof(buffer) - buflen, "%s", payload.c_str());
+
+    // Отправка пакета на сервер
+    send(socket, buffer, buflen, 0);
+}
+
+
+void sendMQTTConnect(int socket, const std::string& username, const std::string& password) {
+    // Формирование пакета CONNECT
+    std::string clientID = "my_client_id";
+    std::string usernameFlag, passwordFlag;
+    
+    if (!username.empty()) {
+        usernameFlag = "\x00\x04" "user" + username;
+    }
+    
+    if (!password.empty()) {
+        passwordFlag = "\x00\x04" "pass" + password;
+    }
+    
+    size_t packetSize = 12 + clientID.size() + usernameFlag.size() + passwordFlag.size();
+    uint8_t packet[packetSize];
+    
+    size_t pos = 0;
+    packet[pos++] = 0x10; // Заголовок CONNECT
+    packet[pos++] = packetSize - 2; // Длина сообщения
+    packet[pos++] = 0x00; packet[pos++] = 0x04;
+    packet[pos++] = 'M'; packet[pos++] = 'Q'; packet[pos++] = 'T'; packet[pos++] = 'T';
+    packet[pos++] = 0x04; // Версия протокола 3.1.1
+    packet[pos++] = 0xC2; // Флаги CONNECT (Clean Session = 1, уровень QoS = 0, оставить <Will> = 0, Retain = 0)
+    packet[pos++] = 0x00; packet[pos++] = 0x3C; // Время жизни сессии (60 секунд)
+    packet[pos++] = 0x00; packet[pos++] = clientID.size();
+    memcpy(packet + pos, clientID.c_str(), clientID.size());
+    pos += clientID.size();
+    
+    memcpy(packet + pos, usernameFlag.c_str(), usernameFlag.size());
+    pos += usernameFlag.size();
+    memcpy(packet + pos, passwordFlag.c_str(), passwordFlag.size());
+    pos += passwordFlag.size();
+    
+    // Отправка пакета на сервер
+    send(socket, packet, packetSize, 0);
+}
