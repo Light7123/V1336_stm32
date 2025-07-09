@@ -1,0 +1,11 @@
+../Core/Src/main.cpp:40:6:)	1040	static
+../Core/Src/main.cpp:81:6:void HAL_UART_TxHalfCpltCallback(UART_HandleTypeDef*)	0	static
+../Core/Src/main.cpp:86:6:void HAL_UART_TxCpltCallback(UART_HandleTypeDef*)	0	static
+../Core/Src/main.cpp:92:6:void modem_work()	576	static
+../Core/Src/main.cpp:180:6:void CSQ_status()	536	static
+../Core/Src/main.cpp:197:6:void modem_status()	520	static
+../Core/Src/main.cpp:228:6:void modem_wait()	88	static
+../Core/Src/main.cpp:385:6:void log_uart(char*)	0	static
+../Core/Src/main.cpp:595:6:void SystemClock_Config()	88	static,ignoring_inline_asm
+../Core/Src/main.cpp:481:5:int main()	72	static,ignoring_inline_asm
+../Core/Src/main.cpp:774:6:void Error_Handler()	0	static,ignoring_inline_asm

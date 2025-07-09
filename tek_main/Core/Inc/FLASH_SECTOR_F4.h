@@ -32,7 +32,7 @@ void Convert_To_Str (uint32_t *Data, char *Buf);
 void Flash_Write_NUM (uint32_t StartSectorAddress, float Num);
 
 float Flash_Read_NUM (uint32_t StartSectorAddress);
-
+static uint32_t GetSector(uint32_t Address);
 
 #ifdef __cplusplus
 }

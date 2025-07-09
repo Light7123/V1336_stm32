@@ -41,7 +41,7 @@ Core/Src/main.o: ../Core/Src/main.cpp ../Core/Inc/main.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h \
  ../Core/Inc/modbus.h ../Core/Inc/main.h ../Core/Inc/modbus_crc.h \
- ../Core/Inc/sim.h ../Core/Inc/GlobalDataKeeper.h \
+ ../Core/Inc/sim.h ../Core/Inc/GlobalDataKeeper.h ../Core/Inc/xmlParse.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h \
  ../Core/Inc/xmlParse.h
@@ -92,6 +92,7 @@ Core/Src/main.o: ../Core/Src/main.cpp ../Core/Inc/main.h \
 ../Core/Inc/modbus_crc.h:
 ../Core/Inc/sim.h:
 ../Core/Inc/GlobalDataKeeper.h:
+../Core/Inc/xmlParse.h:
 ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h:
 ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h:
 ../Core/Inc/xmlParse.h:

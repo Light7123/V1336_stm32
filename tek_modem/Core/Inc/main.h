@@ -31,8 +31,8 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "UartRingbuffer.h"
-
+//#include "UartRingbuffer.h"
+#include "stdbool.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -48,18 +48,30 @@ extern UART_HandleTypeDef huart2;
 
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
-
+void UARTPrint(const char *args, ...);
+extern int init_flag;
+extern bool modem_flag;
+extern int count12;
 /* USER CODE END EM */
 
 /* Exported functions prototypes ---------------------------------------------*/
 void Error_Handler(void);
-void UARTPrint(const char *args, ...) ;
-int modem_init();
-void modem_wait();
+
+/* USER CODE BEGIN EFP */
+void modem_init();
 void modem_send();
 void modem_sub();
-/* USER CODE BEGIN EFP */
-
+void log_uart(char* data);
+extern bool init_ready;
+extern bool pub_ready;
+extern uint32_t message_count;
+extern char recive_packet_init[256];
+extern char recive_packet_send[1010];
+extern char recive_packet_sub[256];
+extern int sub_len;
+extern int pub_len;
+extern int con_len;
+#define UNIXTIME 1686063850
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/

@@ -1,4 +1,4 @@
-Core/Src/FLASH_SECTOR_F4.o: ../Core/Src/FLASH_SECTOR_F4.c \
+Core/Src/FLASH_SECTOR_F4.o: ../Core/Src/FLASH_SECTOR_F4.cpp \
  ../Core/Inc/FLASH_SECTOR_F4.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  ../Core/Inc/stm32f4xx_hal_conf.h \
@@ -30,7 +30,7 @@ Core/Src/FLASH_SECTOR_F4.o: ../Core/Src/FLASH_SECTOR_F4.c \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- ../Core/Inc/main.h
+ ../Core/Inc/main.h ../Core/Inc/xmlParse.h
 ../Core/Inc/FLASH_SECTOR_F4.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
 ../Core/Inc/stm32f4xx_hal_conf.h:
@@ -63,3 +63,4 @@ Core/Src/FLASH_SECTOR_F4.o: ../Core/Src/FLASH_SECTOR_F4.c \
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:
 ../Core/Inc/main.h:
+../Core/Inc/xmlParse.h:

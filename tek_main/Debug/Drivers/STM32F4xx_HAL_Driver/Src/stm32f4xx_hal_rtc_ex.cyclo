@@ -5,10 +5,10 @@
 ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rtc_ex.c:418:19:HAL_RTCEx_SetTamper	3
 ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rtc_ex.c:495:19:HAL_RTCEx_SetTamper_IT	3
 ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rtc_ex.c:580:19:HAL_RTCEx_DeactivateTamper	2
-../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rtc_ex.c:606:6:HAL_RTCEx_TamperTimeStampIRQHandler	7
 ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rtc_ex.c:677:13:HAL_RTCEx_TimeStampEventCallback	1
 ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rtc_ex.c:693:13:HAL_RTCEx_Tamper1EventCallback	1
 ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rtc_ex.c:710:13:HAL_RTCEx_Tamper2EventCallback	1
+../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rtc_ex.c:606:6:HAL_RTCEx_TamperTimeStampIRQHandler	7
 ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rtc_ex.c:728:19:HAL_RTCEx_PollForTimeStampEvent	6
 ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rtc_ex.c:771:19:HAL_RTCEx_PollForTamper1Event	5
 ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rtc_ex.c:808:19:HAL_RTCEx_PollForTamper2Event	5
@@ -16,8 +16,8 @@
 ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rtc_ex.c:960:19:HAL_RTCEx_SetWakeUpTimer_IT	7
 ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rtc_ex.c:1059:19:HAL_RTCEx_DeactivateWakeUpTimer	4
 ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rtc_ex.c:1114:10:HAL_RTCEx_GetWakeUpTimer	1
-../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rtc_ex.c:1131:6:HAL_RTCEx_WakeUpTimerIRQHandler	2
 ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rtc_ex.c:1160:13:HAL_RTCEx_WakeUpTimerEventCallback	1
+../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rtc_ex.c:1131:6:HAL_RTCEx_WakeUpTimerIRQHandler	2
 ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rtc_ex.c:1177:19:HAL_RTCEx_PollForWakeUpTimerEvent	5
 ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rtc_ex.c:1245:6:HAL_RTCEx_BKUPWrite	1
 ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rtc_ex.c:1268:10:HAL_RTCEx_BKUPRead	1

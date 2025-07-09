@@ -26,7 +26,7 @@ typedef struct
 
 /*Инициализация модема и mqtt необходимо передать apn, адрес сервера и имя пользователя
  * если модем уже запущен, а контролер перезагрузился то это тоже работает*/
-int Mqtt_Init(char* serv, char* user);
+int Mqtt_Init();
 
 /*Инициализация TLS. Будет дооступна в следующих обновлениях*/
 void TLS_Init();
@@ -37,15 +37,17 @@ void Mqtt_Publish(char* topic,char* message);
 
 
 /* Подписка на топик, если после функции идет ещё функция взаидоействующая с uart необходима задрежка 3000мс*/
-char* Mqtt_Subscribe(const char* topic1, int size);
-
-
+void Mqtt_Subscribe();
+int Initv2(string serv, string user, string pass);
+extern bool sub;
+extern bool pub;
+extern char buffer3[1500];
 /*Прием сообщения mqtt возвращает и имя топика и сообщение
  * Читаем входящий поток по uart ищем слово +CMQTTRXEND: 0 после
  * этого отбрасываем служебную информаци и записываем название топика и текст сообщения в структуру message_mqtt_recive */
 
-message_mqtt_recive Mqtt_Recive();
-
+void Mqtt_Recive();
+int Mqtt_Init1(string serv, string user, string pass,string topic, string mess);
 
 
 

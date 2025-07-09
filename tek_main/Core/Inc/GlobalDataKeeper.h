@@ -14,6 +14,7 @@
 #include "stm32f4xx_hal.h"
 #include <vector>
 #include "time.h"
+#include "xmlParse.h"
 using namespace std;
 
 
@@ -29,7 +30,7 @@ typedef struct
 	string user;
 	string password;
 	string apn;
-	RTC_TimeTypeDef last_time;
+	uint32_t last_time;
 	string modbus_result;
 	string old_modbus_res;
 } device_conf;
@@ -68,6 +69,14 @@ private:
 typedef std::map<string, int> Mapa;
 
 
+uint8_t Write_Flash_Param(uint32_t addr,DeviceStruct* device);
+uint8_t Write_Flash_Modem(uint32_t addr, ModemStruct* mdm);
+uint8_t FlashErase(uint32_t addr);
+DeviceStruct Read_Flash_Param (uint32_t addr);
+ModemStruct Read_Flash_Modem (uint32_t addr);
+extern uint32_t num_param_addr;
+extern uint32_t start_modem_adrr;
+extern uint32_t start_param_adrr;
 
 
 #endif /* INC_GLOBALDATAKEEPER_H_ */

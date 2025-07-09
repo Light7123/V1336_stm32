@@ -80,6 +80,9 @@ default.size.stdout \
 OBJDUMP_LIST += \
 tek.list \
 
+OBJCOPY_BIN += \
+tek.bin \
+
 
 # All Target
 all: main-build
@@ -103,12 +106,17 @@ tek.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	@echo 'Finished building: $@'
 	@echo ' '
 
+tek.bin: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-objcopy  -O binary $(EXECUTABLES) "tek.bin"
+	@echo 'Finished building: $@'
+	@echo ' '
+
 # Other Targets
 clean:
-	-$(RM) default.size.stdout tek.elf tek.list tek.map
+	-$(RM) default.size.stdout tek.bin tek.elf tek.list tek.map
 	-@echo ' '
 
-secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST)
+secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST) $(OBJCOPY_BIN)
 
 fail-specified-linker-script-missing:
 	@echo 'Error: Cannot find the specified linker script. Check the linker settings in the build configuration.'
