@@ -540,7 +540,8 @@ bool pub_ready=false;
 
 //	pub_ready=true;
 //	init_ready=true;
-//	//Mqtt_Init("kz-kudu.irz.ru", "bob","GG168jcbD",topic,mess);
+
+
 //	//return 0;
 //}
 //void modem_send()
@@ -669,12 +670,12 @@ int main(void)
 		if(modem_flag)
 		{
 			//	CSQ_status();
-			//	Mqtt_Init("kz-kudu.irz.ru", "bob","GG168jcbD","1001999","test");
+		
 			if(init_flag==0)
 			{
 				char timestr[100];
 
-				//Mqtt_Init("kz-kudu.irz.ru", "bob","GG168jcbD","1001999","test");
+				
 
 				if(con_len>0&&pub_len>0)
 				{
@@ -683,7 +684,7 @@ int main(void)
 					Mqtt_Init();
 					//						topic.clear();
 					//						mess.clear();
-					//						//Mqtt_Init1("kz-kudu.irz.ru", "bob","GG168jcbD", "999999/Modem/MB_ConnStat", "OK");
+					//				
 				}
 
 				if(pub)
